@@ -1,4 +1,3 @@
-const OLLAMA_URL = process.env.NEXT_PUBLIC_OLLAMA_URL ?? "http://localhost:11434";
 const MODEL = process.env.NEXT_PUBLIC_OLLAMA_MODEL ?? "llama3.2";
 
 export interface OllamaMessage {
@@ -10,7 +9,7 @@ export async function ollamaChat(
   messages: OllamaMessage[],
   onChunk?: (chunk: string) => void
 ): Promise<string> {
-  const response = await fetch(`${OLLAMA_URL}/api/chat`, {
+  const response = await fetch("/api/ollama/chat", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -71,7 +70,7 @@ export async function ollamaGenerate(
 
 export async function checkOllamaHealth(): Promise<boolean> {
   try {
-    const res = await fetch(`${OLLAMA_URL}/api/tags`, {
+    const res = await fetch("/api/ollama/tags", {
       signal: AbortSignal.timeout(2000),
     });
 

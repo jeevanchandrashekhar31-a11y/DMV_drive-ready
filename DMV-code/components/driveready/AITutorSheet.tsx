@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import OllamaSetup from "./OllamaSetup";
 import { useTutor } from "@/lib/ai/useTutor";
 import type { Question } from "@/lib/questions/types";
 
@@ -12,6 +13,7 @@ interface AITutorSheetProps {
 export default function AITutorSheet({ onClose, currentQuestion }: AITutorSheetProps) {
   const { messages, sendMessage, isLoading, isOnline } = useTutor(currentQuestion);
   const [input, setInput] = useState("");
+  const [setupDismissed, setSetupDismissed] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -96,12 +98,8 @@ export default function AITutorSheet({ onClose, currentQuestion }: AITutorSheetP
           </button>
         </div>
 
-        {isOnline === false && (
-          <div className="px-4 py-3 flex-shrink-0" style={{ background: "rgba(245,158,11,0.08)", borderBottom: "1px solid rgba(245,158,11,0.14)" }}>
-            <p className="text-[13px] font-semibold" style={{ color: "#F59E0B" }}>
-              Ollama offline - run 'ollama serve' to enable AI
-            </p>
-          </div>
+        {isOnline === false && !setupDismissed && (
+          <OllamaSetup onDismiss={() => setSetupDismissed(true)} />
         )}
 
         {/* Chat area */}
